@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Menu Review</title>
+</head>
+<body>
+    <h1 th:text="${menuName}"> reviews</h1>
+
+    <table>
+        <thead>
+            <th>Review detail</th>
+        </thead>
+
+        <tbody>
+            <tr th:each="reviews : ${reviewDto.content}">
+                <td th:text="${reviews.review_details}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

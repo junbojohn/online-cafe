@@ -17,5 +17,5 @@ google search: JpaRepository<T, ID>
 
 @Repository
 public interface ManagerRepository extends JpaRepository<Manager, Long> {
-    Optional<Manager> findManagerByUsername(String username);
+    //Optional<Manager> findManagerByUsername(String username);
 }

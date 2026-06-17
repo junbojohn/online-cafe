@@ -1,6 +1,13 @@
 package com.example.online.cafe.domain.review.service;
 
+import com.example.online.cafe.domain.review.dto.ReviewDto;
+import com.example.online.cafe.domain.review.entity.Review;
 import com.example.online.cafe.domain.review.repository.ReviewRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,5 +23,24 @@ import org.springframework.stereotype.Service;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
 
+    //고객에게 특정 상품의 대한 리뷰만 포함하여 조회하고 보여준다.
+    @Transactional(readOnly = true)
+    public ReviewDto<Review> showReviews(int page, Long menuId) {
+        Pageable pageable =
+                PageRequest.of(
+                        page,
+                        50,
+                        Sort.by("id").ascending()
+                );
 
+        Page<Review> reviews;
+
+        //reviews = reviewRepository.findAll(pageable);
+        //reviews = reviewRepository.findReviewByMenuId(menuId, pageable);
+        reviews = reviewRepository.findByMenu_Id(menuId, pageable);
+
+        return ReviewDto.<Review>builder()
+                .content(reviews.getContent())
+                .build();
+    }
 }

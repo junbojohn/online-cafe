@@ -1,10 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Customer Menu</title>
 </head>
 <body>
+
+    <h1>Menu</h1>
+
+    <table>
+        <thead>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Rating</th>
+            <th>Reviews</th>
+        </thead>
+
+        <tbody>
+            <tr th:each="menu : ${menuCustomerDto.content}">
+                <td th:text="${menu.menu_name}"></td>
+                <td th:text="${menu.price}"></td>
+                <td th:text="${menu.rating}"></td>
+                <!-- <td th:text="${menu.reviews}"></td> -->
+                <td>
+                    <a th:href="@{/menu/customer/reviews(page = ${0}, menuName = ${menu.menu_name}, menuId = ${menu.id})}">
+                        Check reviews
+                    </a>
+                </td>
+
+                <!--
+                <div>
+                    <a th:href="@{/menu/customer/reviews(page = ${0}, menuReviews = ${menu.reviews})}">
+                    <a th:href="@{/menu/customer/reviews(page = ${0}, menuName = ${menu.menu_name}, menuId = ${menu.id})}">
+                        Check reviews
+                    </a>
+                </div>
+                -->
+            </tr>
+        </tbody>
+    </table>
+
+    <form th:action="@{/menu/customer}" method="get">
+        <div>
+            <label>Price lower than: </label>
+            <input type="text" name="price">
+        </div>
+
+        <button type="submit">Search</button>
+    </form>
+
+<!--
+// Not being used at all after switching to Thymeleaf
     <script>
         // URL of my Spring Boot endpoint
         // Spring Boot 엔드포인트의 URL 주소
@@ -43,9 +89,11 @@
     </script>
 
     <h1>Menu</h1>
-    <!-- Container elements for the data -->
+    // Container elements for the data
     <p><strong>Name:</strong> <span id="menu_name">Loading...</span></p>
     <p><strong>Price:</strong> <span id="price">Loading...</span></p>
     <p><strong>Rating:</strong> <span id="rating">Loading...</span></p>
+-->
+
 </body>
 </html>

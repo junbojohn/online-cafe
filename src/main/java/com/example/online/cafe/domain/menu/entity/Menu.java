@@ -1,5 +1,6 @@
 package com.example.online.cafe.domain.menu.entity;
 
+import com.example.online.cafe.domain.orders.entity.Orders;
 import com.example.online.cafe.domain.review.entity.Review;
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,9 +35,14 @@ public class Menu {
     @Column(name = "sales_volume")
     private Long sales_volume;
 
-    @OneToMany
-    @Column(name = "review_Id")
+    @OneToMany(mappedBy = "menu")
     private List<Review> reviews = new ArrayList<>();
+
+    /*
+    @ManyToOne
+    @JoinColumn(name = "orders")
+    private Orders orders;
+    */
 
     @Builder
     public Menu(String menu_name, Integer price, double rating, Long sales, Long sales_volume) {

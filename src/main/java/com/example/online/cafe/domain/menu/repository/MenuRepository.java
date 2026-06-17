@@ -21,5 +21,6 @@ google search: JpaRepository<T, ID>
 public interface MenuRepository extends JpaRepository<Menu, Long> {
     //Optional<Menu> findMenuByName(String menu_name);
     //Page<Menu> showMenuByAlphabetOrder();
-    Page<Menu> showMenuByPriceLowerThan(Integer price, Pageable pageable);
+    //Page<Menu> showMenuByPriceLowerThan(Integer price, Pageable pageable);
+    Page<Menu> findByPriceLessThan(Integer price, Pageable pageable);
 }

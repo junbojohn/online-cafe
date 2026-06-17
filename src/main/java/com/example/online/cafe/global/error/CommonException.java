@@ -1,6 +1,5 @@
 package com.example.online.cafe.global.error;
 
-import com.example.online.cafe.global_notUsed.error.ErrorInterface;
 import lombok.Getter;
 
 @Getter

@@ -1,5 +1,6 @@
 package com.example.online.cafe.domain.review.entity;
 
+import com.example.online.cafe.domain.menu.entity.Menu;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +22,12 @@ public class Review {
 
     @Column(name = "review_details")
     private String review_details;
+
+    @ManyToOne
+    //@JoinColumn(name = "menu_Id")
+    @JoinColumn(name = "menu")
+    private Menu menu;
+    //private Long menu_id;
 
     @Builder
     public Review(String review_details) {

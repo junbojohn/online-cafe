@@ -1,11 +1,12 @@
-package com.example.online.cafe.domain.order.entity;
+package com.example.online.cafe.domain.orders.entity;
 
 import com.example.online.cafe.domain.menu.entity.Menu;
+import com.example.online.cafe.domain.review.entity.Review;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,12 +16,22 @@ import java.util.List;
 @Getter
 //@Setter
 @NoArgsConstructor
-@Table(name = "order")
-public class Order {
+@Table(name = "orders")
+public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_Id")
     private Long id;
+
+    @Column(name = "order_number")
+    private Long order_number;
+
+    //Must connect this with 'Menu' table using foreign key thing
+    //@Column(name = "menu")
+    //private Long menu;
+
+    @Column(name = "menu_quantity")
+    private Long menu_quantity;
 
     @Column(name = "email")
     private String email;
@@ -31,12 +42,19 @@ public class Order {
     @Column(name = "shipped")
     private Boolean shipped;
 
+    /*
+    @OneToMany(mappedBy = "orders")
+    private List<Menu> menus = new ArrayList<>();
+    */
+
+    /*
     @OneToMany
     @Column(name = "menu_Id")
     private List<Menu> menus = new ArrayList<>();
+    */
 
     @Builder
-    public Order(String email, String address, Boolean shipped) {
+    public Orders(String email, String address, Boolean shipped) {
         this.email = email;
         this.address = address;
         this.shipped = shipped;

@@ -7,6 +7,7 @@ import com.example.online.cafe.domain.review.entity.Review;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,18 +28,18 @@ public class MenuService {
     //고객에게 상품 목록에서 보여줄 요소들만 포함하여 상품 목록을 조회하고 보여준다.
     @Transactional(readOnly = true)
     public MenuCustomerDto<Menu> showCustomerMenu(int page, Integer price) {
-        MenuCustomerDto<Menu> menuCustomerDto;
-
         Pageable pageable =
                 PageRequest.of(
                         page,
-                        price
+                        50,
+                        Sort.by("id").ascending()
                 );
 
         Page<Menu> customerMenu;
 
         if (price != null) {
-            customerMenu = menuRepository.showMenuByPriceLowerThan(price, pageable);
+            //customerMenu = menuRepository.showMenuByPriceLowerThan(price, pageable);
+            customerMenu = menuRepository.findByPriceLessThan(price, pageable);
         }
 
         else {
