@@ -39,6 +39,11 @@ public class Menu {
     private List<Review> reviews = new ArrayList<>();
 
     /*
+    @OneToMany(mappedBy = "menu_number")
+    private List<Orders> orders = new ArrayList<>();
+    */
+
+    /*
     @ManyToOne
     @JoinColumn(name = "orders")
     private Orders orders;

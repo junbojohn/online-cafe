@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +27,9 @@ public class Orders {
     @Column(name = "order_number")
     private Long order_number;
 
-    //Must connect this with 'Menu' table using foreign key thing
-    //@Column(name = "menu")
-    //private Long menu;
+    @ManyToOne
+    @JoinColumn(name = "menu_number")
+    private Menu menu_number;
 
     @Column(name = "menu_quantity")
     private Long menu_quantity;
@@ -54,7 +55,10 @@ public class Orders {
     */
 
     @Builder
-    public Orders(String email, String address, Boolean shipped) {
+    public Orders(Long order_number, Menu menu_number, Long menu_quantity, String email, String address, Boolean shipped) {
+        this.order_number = order_number;
+        this.menu_number = menu_number;
+        this.menu_quantity = menu_quantity;
         this.email = email;
         this.address = address;
         this.shipped = shipped;

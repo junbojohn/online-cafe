@@ -7,38 +7,63 @@
 <body>
 
     <h1>Menu</h1>
+    <form th:action="@{/menu/customer/orders}" method="post">
+        <table>
+            <thead>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Rating</th>
+                <th>Reviews</th>
+                <th>Order Amount</th>
+            </thead>
 
-    <table>
-        <thead>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Rating</th>
-            <th>Reviews</th>
-        </thead>
+            <tbody>
+                <tr th:each="menu, stat : ${menuCustomerDto.content}">
+                    <td th:text="${menu.menu_name}"></td>
+                    <td th:text="${menu.price}"></td>
+                    <td th:text="${menu.rating}"></td>
+                    <!-- <td th:text="${menu.reviews}"></td> -->
+                    <td>
+                        <a th:href="@{/menu/customer/reviews(page = ${0}, menuName = ${menu.menu_name}, menuId = ${menu.id})}">
+                            Check reviews
+                        </a>
+                    </td>
 
-        <tbody>
-            <tr th:each="menu : ${menuCustomerDto.content}">
-                <td th:text="${menu.menu_name}"></td>
-                <td th:text="${menu.price}"></td>
-                <td th:text="${menu.rating}"></td>
-                <!-- <td th:text="${menu.reviews}"></td> -->
-                <td>
-                    <a th:href="@{/menu/customer/reviews(page = ${0}, menuName = ${menu.menu_name}, menuId = ${menu.id})}">
-                        Check reviews
-                    </a>
-                </td>
+                    <!--
+                    <div>
+                        <a th:href="@{/menu/customer/reviews(page = ${0}, menuReviews = ${menu.reviews})}">
+                        <a th:href="@{/menu/customer/reviews(page = ${0}, menuName = ${menu.menu_name}, menuId = ${menu.id})}">
+                            Check reviews
+                        </a>
+                    </div>
+                    -->
+
+                    <td>
+                        <!-- <input type="number" th:name="ordered_menu_quantity" th:value="${ordered_menu_quantity[menu.id - 1]}"> -->
+                        <input type="number" name="ordered_menu_quantity" th:value="${ordered_menu_quantity[stat.index]}">
+                    </td>
+                </tr>
 
                 <!--
-                <div>
-                    <a th:href="@{/menu/customer/reviews(page = ${0}, menuReviews = ${menu.reviews})}">
-                    <a th:href="@{/menu/customer/reviews(page = ${0}, menuName = ${menu.menu_name}, menuId = ${menu.id})}">
-                        Check reviews
-                    </a>
-                </div>
+                <tr th:each="i : ${#numbers.sequence(0, ordered_menu_quantity.length - 1)}">
+                    <td>
+                        <input type="number" th:name="ordered_menu_quantity" th:value="${ordered_menu_quantity[i]}">
+                    </td>
+                </tr>
                 -->
-            </tr>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+
+        <label>Email: </label>
+        <input type="text" name="email">
+
+        <label>Address: </label>
+        <input type="text" name="address">
+
+        <button type="submit">Order Menu</button>
+    </form>
+
+    <br />
 
     <form th:action="@{/menu/customer}" method="get">
         <div>
@@ -48,6 +73,13 @@
 
         <button type="submit">Search</button>
     </form>
+
+    <!-- put the parameter that contains orders and pass them to the order page -->
+    <!--
+    <form th:action="@{/menu/customer/orders()}" method="post">
+        <button type="submit">Order Menu</button>
+    </form>
+    -->
 
 <!--
 // Not being used at all after switching to Thymeleaf

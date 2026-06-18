@@ -5,6 +5,8 @@ import com.example.online.cafe.domain.review.entity.Review;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 import java.util.Optional;
 
 /*
@@ -17,6 +19,7 @@ ID: 해당 엔티티(Entity)의 기본키(Primary Key) 데이터 타입. 엔티�
 google search: JpaRepository<T, ID>
 */
 
+@Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     //Optional<Review> findReviewByKeyword(String review_word);
     //Page<Review> findReviewByMenuId(Long menuId, Pageable pageable);
