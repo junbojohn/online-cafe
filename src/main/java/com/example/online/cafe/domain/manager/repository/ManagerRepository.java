@@ -1,6 +1,7 @@
 package com.example.online.cafe.domain.manager.repository;
 
 import com.example.online.cafe.domain.manager.entity.Manager;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;
@@ -18,4 +19,7 @@ google search: JpaRepository<T, ID>
 @Repository
 public interface ManagerRepository extends JpaRepository<Manager, Long> {
     //Optional<Manager> findManagerByUsername(String username);
+    //Page<Manager> findByUsername(String username);
+    Manager findByUsername(String username);
+    boolean existsByUsername(String username);
 }

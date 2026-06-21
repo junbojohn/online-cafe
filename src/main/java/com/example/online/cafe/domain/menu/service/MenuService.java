@@ -25,7 +25,7 @@ import java.util.List;
 public class MenuService {
     private final MenuRepository menuRepository;
 
-    //고객에게 상품 목록에서 보여줄 요소들만 포함하여 상품 목록을 조회하고 보여준다.
+    // 고객에게 상품 목록에서 보여줄 요소들만 포함하여 상품 목록을 조회하고 보여준다.
     @Transactional(readOnly = true)
     public MenuCustomerDto<Menu> showCustomerMenu(int page, Integer price) {
         Pageable pageable =
@@ -46,6 +46,9 @@ public class MenuService {
             customerMenu = menuRepository.findAll(pageable);
         }
 
+        // Jpa Repository의 findAll()를 쓰고 있기 때문에 실제로 보내지는 내용물에 모든 게 포함되어 있다.
+        // 다만 Controller에서 보여줄 것들과 뺴야 할 것들을 분리시키고 있다.
+        // 나중에 findAll()의 대해 더 자세히 파악하면 여기서부터 보여줄 요소들만 분리시켜 보내게 해야 한다.
         return MenuCustomerDto.<Menu>builder()
                 .content(customerMenu.getContent())
                 .build();

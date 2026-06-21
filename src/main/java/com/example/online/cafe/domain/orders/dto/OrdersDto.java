@@ -16,7 +16,15 @@ public class OrdersDto {
 
     private String email;
 
-    private String address;
+    private String post_code;
+
+    private String road_address;
+
+    private String jibun_address;
+
+    private String detail_address;
+
+    private String extra_address;
 
     private Boolean shipped;
 }

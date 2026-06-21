@@ -37,8 +37,20 @@ public class Orders {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "address")
-    private String address;
+    @Column(name = "post_code")
+    private String post_code;
+
+    @Column(name = "road_address")
+    private String road_address;
+
+    @Column(name = "jibun_address")
+    private String jibun_address;
+
+    @Column(name = "detail_address")
+    private String detail_address;
+
+    @Column(name = "extra_address")
+    private String extra_address;
 
     @Column(name = "shipped")
     private Boolean shipped;
@@ -55,12 +67,16 @@ public class Orders {
     */
 
     @Builder
-    public Orders(Long order_number, Menu menu_number, Long menu_quantity, String email, String address, Boolean shipped) {
+    public Orders(Long order_number, Menu menu_number, Long menu_quantity, String email, String post_code, String road_address, String jibun_address, String detail_address, String extra_address, Boolean shipped) {
         this.order_number = order_number;
         this.menu_number = menu_number;
         this.menu_quantity = menu_quantity;
         this.email = email;
-        this.address = address;
+        this.post_code = post_code;
+        this.road_address = road_address;
+        this.jibun_address = jibun_address;
+        this.detail_address = detail_address;
+        this.extra_address = extra_address;
         this.shipped = shipped;
     }
 }

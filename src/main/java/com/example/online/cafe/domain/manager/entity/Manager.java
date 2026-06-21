@@ -8,6 +8,7 @@ import lombok.*;
 @Entity
 @Getter
 //@Setter
+@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "managers")
 public class Manager {
@@ -16,7 +17,7 @@ public class Manager {
     @Column(name = "manager_Id")
     private Long id;
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String username;
 
     @Column(name = "password")

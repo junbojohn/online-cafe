@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manager Menu</title>
+</head>
+<body>
+
+    <h1>Welcome to the Manager Page</h1>
+
+    <!-- logout button -->
+    <form th:action="@{/api/auth/logout}" method="post">
+        <button type="submit">Logout</button>
+    </form>
+
+    <!-- allows manager to add new product data -->
+    <form th:action="@{/manager/menu/add}" method="get">
+        <button type="submit">Add New Menu</button>
+    </form>
+
+    <!-- list of menu for manager to edit -->
+    <form th:action="@{/manager/menu/edit}" method="get">
+        <button type="submit">Edit Menu</button>
+    </form>
+
+    <!-- list of menu for manager to delete -->
+    <form th:action="@{/manager/menu/delete}" method="get">
+        <button type="submit">Delete Menu</button>
+    </form>
+</body>
+</html>

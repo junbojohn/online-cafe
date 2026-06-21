@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Online Cafe</title>
+</head>
+<body>
+    <h1>Welcome to the online cafe!</h1>
+
+    <h2>What would you like to do?</h2>
+
+    <a th:href="@{/menu/customer}">Order menu</a> <br />
+    <a th:href="@{/manager/login}">Manager Login</a> <br />
+    <a th:href="@{/manager/signup}">Manager Sign Up</a> <br />
+</body>
+</html>
