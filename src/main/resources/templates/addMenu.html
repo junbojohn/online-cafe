@@ -1,10 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Add Menu</title>
 </head>
 <body>
+    <form th:action="@{/manager/menu/add/process}" method="post">
+        <div>
+            <label>Menu Name</label>
+            <input type="text" name="menu_name">
+        </div>
 
+        <div>
+            <label>Price</label>
+            <input type="number" min="1" step="1" name="price">
+        </div>
+
+        <button type="submit">Add New Menu</button>
+    </form>
 </body>
 </html>

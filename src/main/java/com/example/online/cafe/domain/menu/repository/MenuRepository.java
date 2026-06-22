@@ -23,4 +23,5 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
     //Page<Menu> showMenuByAlphabetOrder();
     //Page<Menu> showMenuByPriceLowerThan(Integer price, Pageable pageable);
     Page<Menu> findByPriceLessThan(Integer price, Pageable pageable);
+    //boolean existsByMenu_Name(String menu_name);
 }

@@ -50,11 +50,12 @@ public class Menu {
     */
 
     @Builder
-    public Menu(String menu_name, Integer price, double rating, Long sales, Long sales_volume) {
+    public Menu(String menu_name, Integer price, double rating, Long sales, Long sales_volume, List<Review> reviews) {
         this.menu_name = menu_name;
         this.price = price;
         this.rating = rating;
         this.sales = sales;
         this.sales_volume = sales_volume;
+        this.reviews = reviews;
     }
 }

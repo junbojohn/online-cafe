@@ -194,14 +194,14 @@ public class AuthController {
             //return "오류: 이미 사용되는 닉네임 입니다.";
         }
 
-        System.out.println("[" + password + "]");
-        System.out.println("password length: " + password.length());
+        //System.out.println("[" + password + "]");
+        //System.out.println("password length: " + password.length());
 
-        String encoded = encoder.encode(password);
+        //String encoded = encoder.encode(password);
 
-        System.out.println("password: " + password);
-        System.out.println("encoded: " + encoded);
-        System.out.println(encoder.matches(password, encoded));
+        //System.out.println("password: " + password);
+        //System.out.println("encoded: " + encoded);
+        //System.out.println(encoder.matches(password, encoded));
 
         // 새로운 관리자 데이터를 생성한다.
         Manager newManager = Manager.builder()

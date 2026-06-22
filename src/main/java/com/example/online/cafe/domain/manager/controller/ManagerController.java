@@ -6,10 +6,13 @@ import com.example.online.cafe.domain.manager.service.ManagerService;
 import com.example.online.cafe.domain.menu.dto.MenuCustomerDto;
 import com.example.online.cafe.domain.menu.dto.MenuManagerDto;
 import com.example.online.cafe.domain.menu.entity.Menu;
+import com.example.online.cafe.domain.menu.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -27,6 +30,8 @@ import java.util.List;
 public class ManagerController {
     private final ManagerService managerService;
 
+    private final MenuRepository menuRepository;
+
     // 관리자가 로그인 할 수 있게 해주는 html 페이지를 보여준다.
     @GetMapping("/login")
     public String managerLogin() {
@@ -41,6 +46,7 @@ public class ManagerController {
 
     // 관리자에게 특정 기능을 이용할 수 있게 해주는 기능 목록 html 페이지를 보여준다.
     // 이곳에서 관리자는 로그아웃, 상품 등록, 상품 수정, 혹은 상품 삭제 기능을 선택할 수 있는 목록을 볼 수 있다.
+    // 이곳은 관리자가 로그인 상태여야 진입이 가능하다.
     @GetMapping("/menu")
     public String showManagerMenu(
             @RequestParam(defaultValue = "0")
@@ -49,14 +55,64 @@ public class ManagerController {
         return "managerMenu";
     }
 
-    // 관리자에게 새로운 상품 데이터를 생성 및 DB 테이블에 삽입할 수 있게 해준다.
+    // 관리자에게 새로운 상품 데이터를 생성할 수 있게 해준다.
     // 이곳은 관리자가 로그인 상태여야 진입이 가능하다.
     @GetMapping("/menu/add")
-    public String addMenu(
-
-    ) {
-
+    public String addMenu() {
         return "addMenu";
+    }
+
+    // 관리자가 새로 만든 상품 데이터를 생성 및 DB 테이블에 삽입한다.
+    // 이곳은 관리자가 로그인 상태여야 진입이 가능하다.
+    @PostMapping("/menu/add/process")
+    public String addMenuProcess(
+            @RequestParam
+            String menu_name,
+
+            @RequestParam
+            Integer price
+    ) {
+        System.out.println("Adding new menu...");
+
+        // 입력한 상품 이름이 비어있는지, 그리고 가격의 값이 1 이하인지 확인한다.
+        // 둘 중 하나라도 해당할 경우, 상품 추가 페이지로 리다이렉트 시킨다.
+        if (menu_name.isBlank() || price < 1) {
+            System.out.println("Either menu name is empty or the price is lower than 1.");
+            return "redirect:/manager/menu/add";
+        }
+
+        // 기존에 있는 상품 데이터들을 불러온다.
+        List<Menu> menuList = menuRepository.findAll();
+
+        System.out.println("Checking menu duplication...");
+
+        // 새로 생성하고자 하는 상품의 이름이 기존에 있던 상품들 중에 있는지 없는지 확인한다.
+        // 만약 있다면, 상품 추가 페이지로 리다이렉트 시킨다.
+        for (Menu comparingData : menuList) {
+            //System.out.println("Checking menu: " + comparingData.getMenu_name());
+            //System.out.println("same name?: " + comparingData.getMenu_name().equalsIgnoreCase(menu_name));
+
+            if (comparingData.getMenu_name().equalsIgnoreCase(menu_name)) {
+                System.out.println("There already exists a menu named: " + menu_name);
+                return "redirect:/manager/menu/add";
+            }
+        }
+
+        // 새로 추가하려는 상품의 이름이 기존 상품들 중에 없다는 것이 확인되면 새로운 상품 데이트를 생성한다.
+        Menu newMenu = Menu.builder()
+                .menu_name(menu_name)
+                .price(price)
+                .rating(0)
+                .sales(0L)
+                .sales_volume(0L)
+                .reviews(new ArrayList<>())
+                .build();
+
+        // 새로 생성한 상품 데이터를 'Menu' 테이블에 삽입한다.
+        menuRepository.save(newMenu);
+
+        // 신규 상품 데이터 등록 성공 후, 등록에 성공했다는 메세지를 출력하는 html 페이지를 보여준다.
+        return "addSuccess";
     }
 
 
