@@ -1,10 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Menu</title>
+    <title>Editing Menu</title>
 </head>
 <body>
+    <h1 th:text="${menuToEdit.menu_name}"></h1>
 
+    <form th:action="@{/manager/menu/editAndDelete/edit/process}" method="post">
+        <div>
+            <label>Name: </label>
+            <input type="text" name="menu_name" th:placeholder="${menuToEdit.menu_name}">
+        </div>
+
+        <div>
+            <label>Price: </label>
+            <input type="number" min="1" step="1" name="price" th:placeholder="${menuToEdit.price}">
+        </div>
+
+        <input type="hidden" name="menuId" th:value="${menuId}">
+
+        <button type="submit">Edit Menu</button>
+    </form>
 </body>
 </html>

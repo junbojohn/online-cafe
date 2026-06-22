@@ -122,9 +122,10 @@ public class ManagerController {
     // 그럼 다음, 각 기능마다 가지고 있는 전용 html 페이지를 통해서 해당 기능들을 이용할 수 있게 한다.(GET 요청)
     // 전용 html 페이지 다음으로는 각 기능들의 작업을 수행하고 수행 이 후에는 작업이 성공적으로 끝났다는 별도의 html 페이지에서 메세지를 표기한다.(POST 요청)
 
-    // 관리자에게 기존의 상품 데이터를 수정할 수 있게 해준다.
+
+    // 관리자에게 기존의 상품 데이터 목록을 보여줌으로서 특정 상품의 대해 수정 및 삭제 기능을 이용하게 해주는 버튼을 보여준다.
     // 이곳은 관리자가 로그인 상태여야 진입이 가능하다.
-    @GetMapping("/menu/edit")
+    @GetMapping("/menu/editAndDelete")
     public String editMenu(
             @RequestParam(defaultValue = "0")
             int page,
@@ -140,21 +141,77 @@ public class ManagerController {
         model.addAttribute("menuManagerDto", menuManagerDto);
         model.addAttribute("price", price);
 
+        return "editAndDeleteMenu";
+    }
+
+    // 관리자에게 이미 존재하는 특정 상품의 데이터를 수정할 수 있게 해준다.
+    // 이곳은 관리자가 로그인 상태여야 진입이 가능하다.
+    @GetMapping("/menu/editAndDelete/edit")
+    public String editMenu(
+            @RequestParam(required = true)
+            Long menuId,
+
+            Model model
+    ) {
+        Menu menuToEdit = managerService.showMenuDetails(menuId);
+
+        model.addAttribute("menuToEdit", menuToEdit);
+        model.addAttribute("menuId", menuId);
+
         return "editMenu";
     }
 
     // 관리자가 수정을 시도한 기존 상품 데이터의 수정 내용을 적용한다.
     // 이곳은 관리자가 로그인 상태여야 진입이 가능하다.
-    @PostMapping("/menu/edit/process")
-    public String editMenuProcess() {
+    @PostMapping("/menu/editAndDelete/edit/process")
+    public String editMenuProcess(
+            @RequestParam(required = true)
+            Long menuId,
+
+            @RequestParam
+            String menu_name,
+
+            @RequestParam
+            Integer price
+    ) {
+        System.out.println("Editing original menu...");
+
+        // 입력한 상품 이름이 비어있는지, 그리고 가격의 값이 1 이하인지 확인한다.
+        // 둘 중 하나라도 해당할 경우, 기존의 상품 데이터 목록을 보여줌으로서 수정 및 삭제 버튼을 제공해주는 페이지로 리다이렉트 시킨다.
+        if (menu_name.isBlank() || price < 1) {
+            System.out.println("Either menu name is empty or the price is lower than 1.");
+            return "redirect:/manager/menu/editAndDelete";
+        }
+
+        // 기존에 있는 상품 데이터들을 불러온다.
+        List<Menu> menuList = menuRepository.findAll();
+
+        System.out.println("Checking menu duplication...");
+
+        // 수정하고자 하는 상품의 이름이 기존에 있던 상품들 중에 있는지 없는지 확인한다.
+        // 만약 있다면, 기존의 상품 데이터 목록을 보여줌으로서 수정 및 삭제 버튼을 제공해주는 페이지로 리다이렉트 시킨다.
+        for (Menu comparingData : menuList) {
+            //System.out.println("Checking menu: " + comparingData.getMenu_name());
+            //System.out.println("same name?: " + comparingData.getMenu_name().equalsIgnoreCase(menu_name));
+
+            if (comparingData.getMenu_name().equalsIgnoreCase(menu_name)) {
+                System.out.println("There already exists a menu named: " + menu_name);
+                return "redirect:/manager/menu/editAndDelete";
+            }
+        }
+
+        // 수정하려는 상품의 이름이 기존 상품들 중에 없다는 것이 확인되면 상품 데이터의 수정 내용을 적용한다.
+        managerService.editMenu(menuId, menu_name, price);
 
 
+
+        // 상품 데이터 수정 성공 후, 수정에 성공했다는 메세지를 출력하는 html 페이지를 보여준다.
         return "editSuccess";
     }
 
     // 관리자에게 기존의 상품 데이터를 삭제할 수 있게 해준다.
     // 이곳은 관리자가 로그인 상태여야 진입이 가능하다.
-    @GetMapping("/menu/delete")
+    @GetMapping("/menu/editAndDelete/delete")
     public String deleteMenu(
 
     ) {
@@ -165,7 +222,7 @@ public class ManagerController {
 
     // 관리자가 삭제를 시도한 기존 상품 데이터를 삭제한다.
     // 이곳은 관리자가 로그인 상태여야 진입이 가능하다.
-    @PostMapping("/menu/delete/process")
+    @PostMapping("/menu/editAndDelete/delete/process")
     public String deleteMenuProcess() {
 
 

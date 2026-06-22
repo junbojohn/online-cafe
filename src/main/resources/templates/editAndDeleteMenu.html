@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Menu</title>
+</head>
+<body>
+<h1>Menu</h1>
+    <form>
+        <table>
+            <thead>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Rating</th>
+                <th>Sales</th>
+                <th>Sales Volume</th>
+            </thead>
+
+            <tbody>
+                <tr th:each="menu, stat : ${menuManagerDto.content}">
+                    <td th:text="${menu.menu_name}"></td>
+                    <td th:text="${menu.price}"></td>
+                    <td th:text="${menu.rating}"></td>
+                    <td th:text="${menu.sales}"></td>
+                    <td th:text="${menu.sales_volume}"></td>
+
+                    <td>
+                        <a th:href="@{/manager/menu/editAndDelete/edit(menuId = ${menu.id})}">
+                            Edit
+                        </a>
+                    </td>
+
+                    <td>
+                        <a th:href="@{/manager/menu/editAndDelete/delete(menuId = ${menu.id})}">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <br />
+
+    <form th:action="@{/manager/menu/editAndDelete}" method="get">
+        <div>
+            <label>Price lower than: </label>
+            <input type="text" name="price">
+        </div>
+
+        <button type="submit">Search</button>
+    </form>
+</body>
+</html>

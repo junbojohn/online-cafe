@@ -3,6 +3,7 @@ package com.example.online.cafe.domain.menu.entity;
 import com.example.online.cafe.domain.orders.entity.Orders;
 import com.example.online.cafe.domain.review.entity.Review;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,5 +58,13 @@ public class Menu {
         this.sales = sales;
         this.sales_volume = sales_volume;
         this.reviews = reviews;
+    }
+
+    public void updateMenuName(String menu_name) {
+        this.menu_name = menu_name;
+    }
+
+    public void updateMenuPrice(Integer price) {
+        this.price = price;
     }
 }

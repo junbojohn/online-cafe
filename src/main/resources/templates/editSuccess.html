@@ -5,6 +5,10 @@
     <title>Order Succeeded</title>
 </head>
 <body>
+    <h1>Successfully edited the menu!</h1>
 
+    <form th:action="@{/manager/menu}" method="get">
+        <button type="submit">Return to manager menu</button>
+    </form>
 </body>
 </html>

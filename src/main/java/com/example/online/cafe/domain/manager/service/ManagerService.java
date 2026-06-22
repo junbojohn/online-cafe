@@ -12,6 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 /*
@@ -29,33 +31,6 @@ import java.util.List;
 public class ManagerService {
     private final ManagerRepository managerRepository;
     private final MenuRepository menuRepository;
-
-    // 새로운 관리자 데이터를 생성 및 DB 테이블에 삽입한다.
-    public Boolean createManager(String username, String password) {
-
-        // 'Manager' 테이블에 있는 모든 데이터를 가져온다.
-        List<Manager> existingManagers = managerRepository.findAll();
-
-        // 가입하려는 관리자의 username이 이미 존재하는지 확인한다.
-        // 만약 존재한다면 false를 반환하여 가입을 막는다.
-        for (Manager comparingData : existingManagers) {
-            if (comparingData.getUsername() == username) {
-                return false;
-            }
-        }
-
-        // 'Manager' 클래스의 builder()를 이용하여 삽입할 정보들을 삽입하고 데이터를 생성한다.
-        Manager newManager = Manager.builder()
-                .username(username)
-                .password(password)
-                .build();
-
-        // 생성한 데이터를 DB의 'Manager' 테이블에 삽입한다.
-        managerRepository.save(newManager);
-
-        // true 값을 반환하여 새로운 관리자 데이터가 성공적으로 삽입되었음을 알린다.
-        return true;
-    }
 
     // 관리자에게 상품 목록에서 보여줄 요소들을 가져온다.
     public MenuManagerDto<Menu> showManagerMenu(int page, Integer price) {
@@ -85,14 +60,34 @@ public class ManagerService {
         );
     }
 
+    // 관리자에게 특정 상품의 대한 정보들을 가져온다.
+    public Menu showMenuDetails(Long menuId) {
+        return menuRepository.findById(menuId).orElseThrow(() -> new RuntimeException("상품이 존재하지 않습니다."));
+    }
+
     // 관리자에게 새로운 상품 데이터를 생성할 수 있게 해준다.
     public void createMenu() {
 
     }
 
     // 관리자에게 기존에 있던 상품의 데이터를 수정할 수 있게 해준다.
-    public void editMenu() {
+    @Transactional
+    public void editMenu(Long menuId, String menu_name, Integer price) {
+        Menu menuToEdit = showMenuDetails(menuId);
 
+        System.out.println("original name: " + menuToEdit.getMenu_name());
+        System.out.println("original price: " + menuToEdit.getPrice());
+
+        menuToEdit.updateMenuName(menu_name);
+        menuToEdit.updateMenuPrice(price);
+
+        System.out.println("new name: " + menuToEdit.getMenu_name());
+        System.out.println("new price: " + menuToEdit.getPrice());
+
+        // .save() 메서드로도 수정을 DB에 반영할 수 있다.
+        // 그러나 @Transactional 어노테이션을 쓴다면 .save() 메서드는 굳이 쓸 필요가 없다.
+        // 이 어노테이션은 일반적으로 기존 데이터를 수정할 떄 쓰이며, 새로운 데이터를 생성 및 삽입할 때는 .save()를 써야한다.
+        // menuRepository.save(menuToEdit);
     }
 
     // 관리자에게 기존에 있던 상품의 데이터를 삭제하게 해준다.
