@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Writing Review</title>
+</head>
+<body>
+    <h1 th:text="${menuName}"></h1>
+
+    <form th:action="@{/customer/writeReview/writing/reviewSubmit}" method="post">
+
+        <label>Write review here:</label> <br />
+        <textarea name="review_details" rows="6" cols="50"></textarea>
+
+        <input type="hidden" name="menuId" th:value="${menuId}">
+
+        <br />
+
+        <button type="submit">Submit Review</button>
+    </form>
+</body>
+</html>

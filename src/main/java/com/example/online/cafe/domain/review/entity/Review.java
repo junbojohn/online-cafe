@@ -30,7 +30,8 @@ public class Review {
     //private Long menu_id;
 
     @Builder
-    public Review(String review_details) {
+    public Review(String review_details, Menu menu) {
         this.review_details = review_details;
+        this.menu = menu;
     }
 }

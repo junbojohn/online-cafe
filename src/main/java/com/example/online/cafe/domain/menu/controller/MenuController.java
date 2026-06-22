@@ -17,7 +17,7 @@ import java.util.List;
 //@RestController
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/menu")
+@RequestMapping("/customer")
 public class MenuController {
     private final MenuService menuService;
 
@@ -27,7 +27,7 @@ public class MenuController {
 
 
     // 고객에게 보여줄 상품 목록 데이터를 'MenuService' 클래스를 이용해 'MenuCustomerDto' 에서 가져와 반환한다.
-    @GetMapping("/customer")
+    @GetMapping("/menu")
     public String showCustomerMenu(
             @RequestParam(defaultValue = "0")
             int page,
@@ -97,7 +97,7 @@ public class MenuController {
     */
 
     // 고객에게 특정 상품의 대한 리뷰 데이터를 가져와 보여준다.
-    @GetMapping("/customer/reviews")
+    @GetMapping("/menu/reviews")
     public String showReview(
             @RequestParam(defaultValue = "0")
             int page,
@@ -119,7 +119,7 @@ public class MenuController {
     }
 
     // 고객이 주문할 상품(들)이 담겨진 장바구니를 가지고 주문 데이터(들)를 새로 작성하여 DB에 삽입한다.
-    @PostMapping("/customer/orders")
+    @PostMapping("/menu/orders")
     public String showOrderConfirmation(
             //무엇을 주문했는지, 그리고 주문한 상품들마다 주문한 수량을 기록한다.
             @RequestParam
@@ -157,7 +157,7 @@ public class MenuController {
         // 만약 'ordered_menu_quantity' 에 모든 인덱스의 값이 0이면 고객이 장바구니에 아무것도 담지 않았다는 의미다.
         // 이렇게 될 경우, 그냥 상품 목록 페이지로 리다이렉트 시킨다.
         if (cart_empty) {
-            return "redirect:/menu/customer";
+            return "redirect:/customer/menu";
         }
 
         // 만약 'ordered_menu_quantity' 에 최소 하나의 인덱스의 값이 0 이상이면 장바구니에 주문할 상품이 최소 한 개 있다는 뜻이며, 해당 인덱스의 값은 그 상품을 그 수량 만큼 주문하겠다는 의미다.
@@ -170,6 +170,61 @@ public class MenuController {
             return "orderSuccess";
         }
     }
+
+    // 고객이 리뷰를 남길 수 있도록 상품 목록을 먼저 보여준다.
+    @GetMapping("/writeReview")
+    public String askMenuToReview(
+            @RequestParam(defaultValue = "0")
+            int page,
+
+            //기본적으로 모든 상품이 50,000원을 넘기지 않는다는 하에 가정하여 기본값을 50000으로 한다. 이래야 기본으로 나오는 메뉴에 모든 상품이 나올 수 있다.
+            @RequestParam(defaultValue = "50000")
+            Integer price,
+
+            Model model
+    ) {
+
+        MenuCustomerDto<Menu> menuCustomerDto = menuService.showCustomerMenu(page, price);
+
+        model.addAttribute("menuCustomerDto", menuCustomerDto);
+        model.addAttribute("price", price);
+
+        return "askMenuToReview";
+    }
+
+    // 고객이 특정 상품의 대한 리뷰를 남길 수 있게 해준다.
+    @GetMapping("/writeReview/writing")
+    public String askReviewDetails(
+            @RequestParam(required = true)
+            String menuName,
+
+            @RequestParam(required = true)
+            Long menuId,
+
+            Model model
+    ) {
+
+        model.addAttribute("menuName", menuName);
+        model.addAttribute("menuId", menuId);
+
+        return "writeReview";
+    }
+
+    @PostMapping("/writeReview/writing/reviewSubmit")
+    public String reviewSubmit(
+            @RequestParam(required = true)
+            Long menuId,
+
+            @RequestParam
+            String review_details
+    ) {
+
+        reviewService.submitReview(menuId, review_details);
+
+        return "reviewSubmitted";
+    }
+
+
 
     /*
     google search: ResponseEntity.ok() java

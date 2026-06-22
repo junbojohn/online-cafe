@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
+import java.util.List;
 import java.util.Optional;
 
 /*
@@ -24,4 +24,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     //Optional<Review> findReviewByKeyword(String review_word);
     //Page<Review> findReviewByMenuId(Long menuId, Pageable pageable);
     Page<Review> findByMenu_Id(Long menuId, Pageable pageable);
+    List<Review> findByMenu_Id(Long menuId);
 }

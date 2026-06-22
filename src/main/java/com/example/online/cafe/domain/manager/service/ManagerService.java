@@ -6,6 +6,7 @@ import com.example.online.cafe.domain.manager.repository.ManagerRepository;
 import com.example.online.cafe.domain.menu.dto.MenuManagerDto;
 import com.example.online.cafe.domain.menu.entity.Menu;
 import com.example.online.cafe.domain.menu.repository.MenuRepository;
+import com.example.online.cafe.domain.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +32,7 @@ import java.util.List;
 public class ManagerService {
     private final ManagerRepository managerRepository;
     private final MenuRepository menuRepository;
+    private final ReviewService reviewService;
 
     // 관리자에게 상품 목록에서 보여줄 요소들을 가져온다.
     public MenuManagerDto<Menu> showManagerMenu(int page, Integer price) {
@@ -65,11 +67,6 @@ public class ManagerService {
         return menuRepository.findById(menuId).orElseThrow(() -> new RuntimeException("상품이 존재하지 않습니다."));
     }
 
-    // 관리자에게 새로운 상품 데이터를 생성할 수 있게 해준다.
-    public void createMenu() {
-
-    }
-
     // 관리자에게 기존에 있던 상품의 데이터를 수정할 수 있게 해준다.
     @Transactional
     public void editMenu(Long menuId, String menu_name, Integer price) {
@@ -91,9 +88,15 @@ public class ManagerService {
     }
 
     // 관리자에게 기존에 있던 상품의 데이터를 삭제하게 해준다.
+    // 삭제하고자 하는 상품의 데이터에 포함된 리뷰 데이터들도 같이 삭제한다.
     public void deleteMenu(Long menuId) {
+        // 먼저 삭제하고자 하는 상품 데이터를 찾는다.
         Menu menuToDelete = showMenuDetails(menuId);
 
+        // 찾은 상품 데이터에 포함된 모든 리뷰 데이터들을 삭제한다.
+        reviewService.deleteReview(menuId);
+
+        // 마지막으로 상품 데이터를 완전히 삭제한다.
         menuRepository.delete(menuToDelete);
     }
 

@@ -70,8 +70,10 @@ public class WebSecurityConfig {
                                         "/api/auth/**",
                                         "/api/test/all",
                                         "/welcome",
-                                        "/menu/customer",
-                                        "/menu/customer/**",
+                                        "/customer/menu",
+                                        "/customer/menu/**",
+                                        "/customer/writeReview",
+                                        "/customer/writeReview/**",
                                         "/manager/login",
                                         "/manager/signup"
                                 )

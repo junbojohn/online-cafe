@@ -67,4 +67,8 @@ public class Menu {
     public void updateMenuPrice(Integer price) {
         this.price = price;
     }
+
+    public void addReview(Review newReview) {
+        this.reviews.add(newReview);
+    }
 }

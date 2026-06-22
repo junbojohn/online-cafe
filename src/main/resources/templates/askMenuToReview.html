@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Menu Review</title>
+</head>
+<body>
+    <h1>Which menu would you like to write review for?</h1>
+
+    <form>
+        <table>
+            <thead>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Rating</th>
+            </thead>
+
+            <tbody>
+                <tr th:each="menu, stat : ${menuCustomerDto.content}">
+                    <td th:text="${menu.menu_name}"></td>
+                    <td th:text="${menu.price}"></td>
+                    <td th:text="${menu.rating}"></td>
+                    <td>
+                        <a th:href="@{/customer/writeReview/writing(menuName = ${menu.menu_name}, menuId = ${menu.id})}">
+                            Write Review
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <br />
+
+    <form th:action="@{/customer/writeReview}" method="get">
+        <div>
+            <label>Price lower than: </label>
+            <input type="text" name="price">
+        </div>
+
+        <button type="submit">Search</button>
+    </form>
+</body>
+</html>

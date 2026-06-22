@@ -7,7 +7,7 @@
 <body>
 
     <h1>Menu</h1>
-    <form th:action="@{/menu/customer/orders}" method="post">
+    <form th:action="@{/customer/menu/orders}" method="post">
         <table>
             <thead>
                 <th>Name</th>
@@ -24,7 +24,7 @@
                     <td th:text="${menu.rating}"></td>
                     <!-- <td th:text="${menu.reviews}"></td> -->
                     <td>
-                        <a th:href="@{/menu/customer/reviews(page = ${0}, menuName = ${menu.menu_name}, menuId = ${menu.id})}">
+                        <a th:href="@{/customer/menu/reviews(page = ${0}, menuName = ${menu.menu_name}, menuId = ${menu.id})}">
                             Check reviews
                         </a>
                     </td>
@@ -79,7 +79,7 @@
 
     <br />
 
-    <form th:action="@{/menu/customer}" method="get">
+    <form th:action="@{/customer/menu}" method="get">
         <div>
             <label>Price lower than: </label>
             <input type="text" name="price">
