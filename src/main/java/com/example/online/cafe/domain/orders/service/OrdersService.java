@@ -7,6 +7,7 @@ import com.example.online.cafe.domain.orders.entity.Orders;
 import com.example.online.cafe.domain.orders.repository.OrdersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -104,5 +105,12 @@ public class OrdersService {
                 }
             }
         }
+    }
+
+    @Transactional
+    public void updateShippedOrders() {
+        int count = ordersRepository.updateAllShipped();
+
+        System.out.println(count + " order(s) are being shipped");
     }
 }
