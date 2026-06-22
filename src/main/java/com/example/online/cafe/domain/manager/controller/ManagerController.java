@@ -203,8 +203,6 @@ public class ManagerController {
         // 수정하려는 상품의 이름이 기존 상품들 중에 없다는 것이 확인되면 상품 데이터의 수정 내용을 적용한다.
         managerService.editMenu(menuId, menu_name, price);
 
-
-
         // 상품 데이터 수정 성공 후, 수정에 성공했다는 메세지를 출력하는 html 페이지를 보여준다.
         return "editSuccess";
     }
@@ -213,9 +211,15 @@ public class ManagerController {
     // 이곳은 관리자가 로그인 상태여야 진입이 가능하다.
     @GetMapping("/menu/editAndDelete/delete")
     public String deleteMenu(
+            @RequestParam(required = true)
+            Long menuId,
 
+            Model model
     ) {
+        Menu menuToDelete = managerService.showMenuDetails(menuId);
 
+        model.addAttribute("menuToDelete", menuToDelete);
+        model.addAttribute("menuId", menuId);
 
         return "deleteMenu";
     }
@@ -223,9 +227,18 @@ public class ManagerController {
     // 관리자가 삭제를 시도한 기존 상품 데이터를 삭제한다.
     // 이곳은 관리자가 로그인 상태여야 진입이 가능하다.
     @PostMapping("/menu/editAndDelete/delete/process")
-    public String deleteMenuProcess() {
+    public String deleteMenuProcess(
+            @RequestParam(required = true)
+            Long menuId,
 
+            Model model
+    ) {
 
+        // managerService의 'deleteMenu' 메서드로 삭제하고자 하는 데이터의 PK인 ID를 이용하여 데이터를 찾은 다음,
+        // 해당 데이터를 DB에서 삭제시킨다.
+        managerService.deleteMenu(menuId);
+
+        // 데이터 삭제 이 후, 성공적으로 삭제 했다는 메세지를 출력하는 html 페이지를 보여준다.
         return "deleteSuccess";
     }
 }

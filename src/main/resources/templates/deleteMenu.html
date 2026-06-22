@@ -1,10 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Delete Menu</title>
 </head>
 <body>
+    <h1 th:text="${menuToDelete.menu_name}"></h1>
 
+    <form th:action="@{/manager/menu/editAndDelete/delete/process}" method="post">
+        <div>
+            <label>Price: </label>
+            <label th:text="${menuToDelete.price}"></label>
+        </div>
+
+        <div>
+            <label>Rating: </label>
+            <label th:text="${menuToDelete.rating}"></label>
+        </div>
+
+        <div>
+            <label>Sales: </label>
+            <label th:text="${menuToDelete.sales}"></label>
+        </div>
+
+        <div>
+            <label>Sales Volume: </label>
+            <label th:text="${menuToDelete.sales_volume}"></label>
+        </div>
+
+        <input type="hidden" name="menuId" th:value="${menuId}">
+
+        <h2>Are you sure you want to delete this menu?</h2>
+
+        <button type="submit">Delete Menu</button>
+    </form>
 </body>
 </html>

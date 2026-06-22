@@ -91,8 +91,10 @@ public class ManagerService {
     }
 
     // 관리자에게 기존에 있던 상품의 데이터를 삭제하게 해준다.
-    public void deleteMenu() {
+    public void deleteMenu(Long menuId) {
+        Menu menuToDelete = showMenuDetails(menuId);
 
+        menuRepository.delete(menuToDelete);
     }
 
 }
