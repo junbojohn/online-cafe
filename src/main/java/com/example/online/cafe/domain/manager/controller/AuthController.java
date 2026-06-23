@@ -39,9 +39,6 @@ public class AuthController {
     @Autowired
     JwtUtil jwtUtils;
 
-    @Autowired
-    CustomManagerService managerService;
-
     // 존재하는 관리자가 로그인을 시도하면 JWT 토큰을 생성한다.
     @PostMapping("/login")
     public String authenticateUser(

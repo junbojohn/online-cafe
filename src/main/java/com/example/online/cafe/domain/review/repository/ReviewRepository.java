@@ -24,5 +24,4 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     //Optional<Review> findReviewByKeyword(String review_word);
     //Page<Review> findReviewByMenuId(Long menuId, Pageable pageable);
     Page<Review> findByMenu_Id(Long menuId, Pageable pageable);
-    List<Review> findByMenu_Id(Long menuId);
 }

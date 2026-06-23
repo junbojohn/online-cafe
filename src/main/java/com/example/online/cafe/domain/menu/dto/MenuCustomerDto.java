@@ -24,7 +24,7 @@ import java.util.List;
 //@Data
 //@AllArgsConstructor
 //public record MenuCustomerDto(String menu_name, Long price, double rating, List<Review> reviews)
-public record MenuCustomerDto<T>(List<T> content) {
+public record MenuCustomerDto<Menu>(List<Menu> content) {
     /*
     //Not being used if this is a record
 

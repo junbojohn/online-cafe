@@ -6,5 +6,15 @@
 </head>
 <body>
     <h1>Thank you for your review!</h1>
+
+    <form th:action="@{/customer/menu}" method="get">
+        <button type="submit">Go Order Menu</button>
+    </form>
+
+    <br />
+
+    <form th:action="@{/customer/writeReview}" method="get">
+        <button type="submit">Go Review Other Menu</button>
+    </form>
 </body>
 </html>

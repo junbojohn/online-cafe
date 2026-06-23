@@ -2,11 +2,10 @@ package com.example.online.cafe.domain.menu.controller;
 
 import com.example.online.cafe.domain.menu.dto.MenuCustomerDto;
 import com.example.online.cafe.domain.menu.entity.Menu;
+import com.example.online.cafe.domain.menu.repository.MenuRepository;
 import com.example.online.cafe.domain.menu.service.MenuService;
-import com.example.online.cafe.domain.orders.service.OrdersService;
-import com.example.online.cafe.domain.review.dto.ReviewDto;
-import com.example.online.cafe.domain.review.entity.Review;
-import com.example.online.cafe.domain.review.service.ReviewService;
+import com.example.online.cafe.domain.orders.dto.OrdersDto;
+import com.example.online.cafe.domain.orders.dto.OrdersFormDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,9 +20,7 @@ import java.util.List;
 public class MenuController {
     private final MenuService menuService;
 
-    private final ReviewService reviewService;
-
-    private final OrdersService ordersService;
+    private final MenuRepository menuRepository;
 
 
     // 고객에게 보여줄 상품 목록 데이터를 'MenuService' 클래스를 이용해 'MenuCustomerDto' 에서 가져와 반환한다.
@@ -43,11 +40,41 @@ public class MenuController {
 
         // 어떤 상품들을 주문했는지 기록한다. 상품 갯수 만큼의 배열(array) 크기를 정하고 각 배열의 인덱스들을 각 상품들의 고유값(ID)을 가리키게 한다. 배열 안에 특정 인덱스의 값이 0 이상이면 그 인덱스에 해당하는 고유값을 가진 상품을 그 만큼 주문하겠다는 의미다.
         // 만약 인덱스의 값이 0이면 해당 인덱스에 해당하는 상품은 주문 하지 않겠다는 의미다.
-        Long[] ordered_menu_quantity = new Long[menuService.showCustomerMenu(page, 50000).content().size()];
+        // * 현재 가격 필터링을 적용한 채로 주문을 하면 엉뚱한 상품 ID 값이 이용되는 버그가 있다. 배열(array)말고 다른 방법을 사용할 것.
+        // 예시: 20개의 상품들 중에서 가격을 1500 이하로 필터링을 적용하면 8개가 나오는데 본래 상품 ID값이 8(Cocoa)인게 필터링을 적용하면 ID값이 5로 나온다
+        //Long[] ordered_menu_quantity = new Long[menuService.showCustomerMenu(page, 50000).content().size()];
+
+        // 어떤 상품들을 주문했는지 기록하기 위한 변수인 'shoppingCart' 를 만든다.
+        OrdersFormDto shoppingCart = new OrdersFormDto();
+
+        // 'menuCustomerDto' 의 content()를 가져와 안에 있는 모든 'Menu' 데이터를 조회하며 'shoppingCart' 의 구성을 준비한다.
+        // 'menuCustomerDto' 의 content()를 조회하는 이유는 바로 가격 필터링 적용 여부에 따라 가져오는 상품 데이터들이 다르기 때문이다.
+        // 가격 필터링 적용 여부에 따라 올바른 상품 ID 값으로 올바른 상품 데이터를 찾아내어 주문 데이터에 삽입할 수 있게 된다.
+        for (Menu menu : menuCustomerDto.content()) {
+            OrdersDto dto = OrdersDto.builder()
+                    .menu_id(menu.getId())
+                    .menu_quantity(0L)
+                    .build();
+
+            shoppingCart.getOrders().add(dto);
+        }
+
+        /*
+        for (Menu menu : menuList) {
+            OrdersDto dto = OrdersDto.builder()
+                    .menu_id(menu.getId())
+                    .menu_quantity(0L)
+                    .build();
+
+            shoppingCart.getOrders().add(dto);
+        }
+        */
 
         model.addAttribute("menuCustomerDto", menuCustomerDto);
         model.addAttribute("price", price);
-        model.addAttribute("ordered_menu_quantity", ordered_menu_quantity);
+        model.addAttribute("shoppingCart", shoppingCart);
+
+        //model.addAttribute("ordered_menu_quantity", ordered_menu_quantity);
 
         return "customerMenu";
     }
@@ -96,133 +123,11 @@ public class MenuController {
     }
     */
 
-    // 고객에게 특정 상품의 대한 리뷰 데이터를 가져와 보여준다.
-    @GetMapping("/menu/reviews")
-    public String showReview(
-            @RequestParam(defaultValue = "0")
-            int page,
 
-            @RequestParam(required = true)
-            String menuName,
 
-            @RequestParam(required = true)
-            Long menuId,
 
-            Model model
-    ) {
-        ReviewDto<Review> reviewDto = reviewService.showReviews(page, menuId);
 
-        model.addAttribute("menuName", menuName);
-        model.addAttribute("reviewDto", reviewDto);
 
-        return "customerMenuReviews";
-    }
-
-    // 고객이 주문할 상품(들)이 담겨진 장바구니를 가지고 주문 데이터(들)를 새로 작성하여 DB에 삽입한다.
-    @PostMapping("/menu/orders")
-    public String showOrderConfirmation(
-            //무엇을 주문했는지, 그리고 주문한 상품들마다 주문한 수량을 기록한다.
-            @RequestParam
-            Long[] ordered_menu_quantity,
-
-            @RequestParam(required = true)
-            String email,
-
-            @RequestParam(required = true)
-            String post_code,
-
-            @RequestParam(required = true)
-            String road_address,
-
-            @RequestParam(required = true)
-            String jibun_address,
-
-            @RequestParam(required = true)
-            String detail_address,
-
-            @RequestParam
-            String extra_address
-    ) {
-        Boolean cart_empty = true;
-
-        //System.out.println("from Controller, ordered_menu_quantity size: " + ordered_menu_quantity.length + "\n");
-
-        // 'ordered_menu_quantity' 를 확인하여 최소 한 개의 상품을 주문했는지 확인한다.
-        for (Long menu : ordered_menu_quantity) {
-            if (menu != null && menu > 0) {
-                cart_empty = false;
-            }
-        }
-
-        // 만약 'ordered_menu_quantity' 에 모든 인덱스의 값이 0이면 고객이 장바구니에 아무것도 담지 않았다는 의미다.
-        // 이렇게 될 경우, 그냥 상품 목록 페이지로 리다이렉트 시킨다.
-        if (cart_empty) {
-            return "redirect:/customer/menu";
-        }
-
-        // 만약 'ordered_menu_quantity' 에 최소 하나의 인덱스의 값이 0 이상이면 장바구니에 주문할 상품이 최소 한 개 있다는 뜻이며, 해당 인덱스의 값은 그 상품을 그 수량 만큼 주문하겠다는 의미다.
-        // 이렇게 될 경우, 'createOrders' 함수에 'ordered_menu_quantity' 를 보내어 주문할 상품의 종류 갯수 만큼 새로운 데이터를 생성하여 'Orders' 테이블에 삽입한다.
-        // 삽입이 끝나고 나면 주문이 성공적으로 접수 되었다는 메세지가 담겨진 html 페이지를 보여준다.
-        else {
-            //use OrdersService class to create and insert new data into 'orders'
-            ordersService.createOrders(ordered_menu_quantity, email, post_code, road_address, jibun_address, detail_address, extra_address);
-
-            return "orderSuccess";
-        }
-    }
-
-    // 고객이 리뷰를 남길 수 있도록 상품 목록을 먼저 보여준다.
-    @GetMapping("/writeReview")
-    public String askMenuToReview(
-            @RequestParam(defaultValue = "0")
-            int page,
-
-            //기본적으로 모든 상품이 50,000원을 넘기지 않는다는 하에 가정하여 기본값을 50000으로 한다. 이래야 기본으로 나오는 메뉴에 모든 상품이 나올 수 있다.
-            @RequestParam(defaultValue = "50000")
-            Integer price,
-
-            Model model
-    ) {
-
-        MenuCustomerDto<Menu> menuCustomerDto = menuService.showCustomerMenu(page, price);
-
-        model.addAttribute("menuCustomerDto", menuCustomerDto);
-        model.addAttribute("price", price);
-
-        return "askMenuToReview";
-    }
-
-    // 고객이 특정 상품의 대한 리뷰를 남길 수 있게 해준다.
-    @GetMapping("/writeReview/writing")
-    public String askReviewDetails(
-            @RequestParam(required = true)
-            String menuName,
-
-            @RequestParam(required = true)
-            Long menuId,
-
-            Model model
-    ) {
-
-        model.addAttribute("menuName", menuName);
-        model.addAttribute("menuId", menuId);
-
-        return "writeReview";
-    }
-
-    @PostMapping("/writeReview/writing/reviewSubmit")
-    public String reviewSubmit(
-            @RequestParam(required = true)
-            Long menuId,
-
-            @RequestParam
-            String review_details
-    ) {
-
-        reviewService.submitReview(menuId, review_details);
-
-        return "reviewSubmitted";
-    }
 
 
 

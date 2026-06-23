@@ -6,5 +6,9 @@
 </head>
 <body>
     <h1>Thank you for your order!</h1>
+
+    <form th:action="@{/customer/menu}" method="get">
+        <button type="submit">Return to menu list</button>
+    </form>
 </body>
 </html>

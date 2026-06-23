@@ -15,13 +15,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /*
 관리자(Manager)가 이용할 수 있는 기능들을 모은 곳
 
 * 신규 상품 등록
-* 기존 상품 목록 조회(각 상품 별 판매량, 매출, 별점, 리뷰 정보 포함)
+* 기존 상품 목록 조회(각 상품 별 판매량, 매출, 별점 정보 포함)
 * 기존 상품 수정
 * 기존 상품 삭제
 
@@ -30,7 +31,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ManagerService {
-    private final ManagerRepository managerRepository;
     private final MenuRepository menuRepository;
     private final ReviewService reviewService;
 
@@ -67,18 +67,33 @@ public class ManagerService {
         return menuRepository.findById(menuId).orElseThrow(() -> new RuntimeException("상품이 존재하지 않습니다."));
     }
 
+    public void addMenu(String menuName, Integer price) {
+        // 새로 추가하려는 상품의 이름이 기존 상품들 중에 없다는 것이 확인되면 새로운 상품 데이트를 생성한다.
+        Menu newMenu = Menu.builder()
+                .menuName(menuName)
+                .price(price)
+                .rating(0)
+                .sales(0L)
+                .sales_volume(0L)
+                .reviews(new ArrayList<>())
+                .build();
+
+        // 새로 생성한 상품 데이터를 'Menu' 테이블에 삽입한다.
+        menuRepository.save(newMenu);
+    }
+
     // 관리자에게 기존에 있던 상품의 데이터를 수정할 수 있게 해준다.
     @Transactional
     public void editMenu(Long menuId, String menu_name, Integer price) {
         Menu menuToEdit = showMenuDetails(menuId);
 
-        System.out.println("original name: " + menuToEdit.getMenu_name());
+        System.out.println("original name: " + menuToEdit.getMenuName());
         System.out.println("original price: " + menuToEdit.getPrice());
 
         menuToEdit.updateMenuName(menu_name);
         menuToEdit.updateMenuPrice(price);
 
-        System.out.println("new name: " + menuToEdit.getMenu_name());
+        System.out.println("new name: " + menuToEdit.getMenuName());
         System.out.println("new price: " + menuToEdit.getPrice());
 
         // .save() 메서드로도 수정을 DB에 반영할 수 있다.

@@ -4,5 +4,5 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record ReviewDto<T>(List<T> content) {
+public record ReviewDto<Review>(List<Review> content) {
 }

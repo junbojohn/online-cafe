@@ -22,7 +22,7 @@ public class Menu {
     private Long id;
 
     @Column(name = "menu_name")
-    private String menu_name;
+    private String menuName;
 
     @Column(name = "price")
     private Integer price;
@@ -51,8 +51,8 @@ public class Menu {
     */
 
     @Builder
-    public Menu(String menu_name, Integer price, double rating, Long sales, Long sales_volume, List<Review> reviews) {
-        this.menu_name = menu_name;
+    public Menu(String menuName, Integer price, double rating, Long sales, Long sales_volume, List<Review> reviews) {
+        this.menuName = menuName;
         this.price = price;
         this.rating = rating;
         this.sales = sales;
@@ -60,8 +60,8 @@ public class Menu {
         this.reviews = reviews;
     }
 
-    public void updateMenuName(String menu_name) {
-        this.menu_name = menu_name;
+    public void updateMenuName(String menuName) {
+        this.menuName = menuName;
     }
 
     public void updateMenuPrice(Integer price) {

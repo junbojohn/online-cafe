@@ -50,7 +50,6 @@ public class ReviewService {
 
     // 새로운 리뷰 데이터를 생성 및 삽입한다.
     // 리뷰 하고자 하는 상품의 데이터를 먼저 찾은 다음, 그 찾은 상품 데이터를 새로운 리뷰 데이터의 일부로 삽입한다.
-    @Transactional
     public void submitReview(Long menuId, String review_details) {
         // 리뷰하고자 하는 상품의 데이터를 찾는다.
         Menu menuToGetReview = menuRepository.findById(menuId).orElseThrow(() -> new RuntimeException("상품이 존재하지 않습니다."));

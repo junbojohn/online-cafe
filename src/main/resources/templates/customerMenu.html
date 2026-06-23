@@ -7,7 +7,7 @@
 <body>
 
     <h1>Menu</h1>
-    <form th:action="@{/customer/menu/orders}" method="post">
+    <form th:action="@{/customer/menu/orders}" th:object="${shoppingCart}" method="post">
         <table>
             <thead>
                 <th>Name</th>
@@ -19,12 +19,12 @@
 
             <tbody>
                 <tr th:each="menu, stat : ${menuCustomerDto.content}">
-                    <td th:text="${menu.menu_name}"></td>
+                    <td th:text="${menu.menuName}"></td>
                     <td th:text="${menu.price}"></td>
                     <td th:text="${menu.rating}"></td>
                     <!-- <td th:text="${menu.reviews}"></td> -->
                     <td>
-                        <a th:href="@{/customer/menu/reviews(page = ${0}, menuName = ${menu.menu_name}, menuId = ${menu.id})}">
+                        <a th:href="@{/customer/menu/reviews(page = ${0}, menuName = ${menu.menuName}, menuId = ${menu.id})}">
                             Check reviews
                         </a>
                     </td>
@@ -40,7 +40,11 @@
 
                     <td>
                         <!-- <input type="number" th:name="ordered_menu_quantity" th:value="${ordered_menu_quantity[menu.id - 1]}"> -->
-                        <input type="number" name="ordered_menu_quantity" th:value="${ordered_menu_quantity[stat.index]}">
+                        <!-- <input type="number" name="ordered_menu_quantity" th:value="${ordered_menu_quantity[stat.index]}"> -->
+
+                        <input type="hidden" th:field="*{orders[__${stat.index}__].menu_id}">
+
+                        <input type="number" min="0" th:field="*{orders[__${stat.index}__].menu_quantity}">
                     </td>
                 </tr>
 

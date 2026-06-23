@@ -92,24 +92,14 @@ public class ManagerController {
             //System.out.println("Checking menu: " + comparingData.getMenu_name());
             //System.out.println("same name?: " + comparingData.getMenu_name().equalsIgnoreCase(menu_name));
 
-            if (comparingData.getMenu_name().equalsIgnoreCase(menu_name)) {
+            if (comparingData.getMenuName().equalsIgnoreCase(menu_name)) {
                 System.out.println("There already exists a menu named: " + menu_name);
                 return "redirect:/manager/menu/add";
             }
         }
 
-        // 새로 추가하려는 상품의 이름이 기존 상품들 중에 없다는 것이 확인되면 새로운 상품 데이트를 생성한다.
-        Menu newMenu = Menu.builder()
-                .menu_name(menu_name)
-                .price(price)
-                .rating(0)
-                .sales(0L)
-                .sales_volume(0L)
-                .reviews(new ArrayList<>())
-                .build();
-
-        // 새로 생성한 상품 데이터를 'Menu' 테이블에 삽입한다.
-        menuRepository.save(newMenu);
+        // 생성하고자 하는 상품의 이름이 중복되지 않으면 새로운 상품 데이터를 생싱 및 삽입한다.
+        managerService.addMenu(menu_name, price);
 
         // 신규 상품 데이터 등록 성공 후, 등록에 성공했다는 메세지를 출력하는 html 페이지를 보여준다.
         return "addSuccess";
@@ -123,7 +113,7 @@ public class ManagerController {
     // 전용 html 페이지 다음으로는 각 기능들의 작업을 수행하고 수행 이 후에는 작업이 성공적으로 끝났다는 별도의 html 페이지에서 메세지를 표기한다.(POST 요청)
 
 
-    // 관리자에게 기존의 상품 데이터 목록을 보여줌으로서 특정 상품의 대해 수정 및 삭제 기능을 이용하게 해주는 버튼을 보여준다.
+    // 관리자에게 기존의 상품 데이터 목록을 보여줌으로서 특정 상품의 대해 수정 및 삭제 기능을 이용하게 해주는 링크를 보여준다.
     // 이곳은 관리자가 로그인 상태여야 진입이 가능하다.
     @GetMapping("/menu/editAndDelete")
     public String editMenu(
@@ -194,7 +184,7 @@ public class ManagerController {
             //System.out.println("Checking menu: " + comparingData.getMenu_name());
             //System.out.println("same name?: " + comparingData.getMenu_name().equalsIgnoreCase(menu_name));
 
-            if (comparingData.getMenu_name().equalsIgnoreCase(menu_name)) {
+            if (comparingData.getMenuName().equalsIgnoreCase(menu_name)) {
                 System.out.println("There already exists a menu named: " + menu_name);
                 return "redirect:/manager/menu/editAndDelete";
             }

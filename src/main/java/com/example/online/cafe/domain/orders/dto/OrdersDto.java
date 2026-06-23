@@ -1,13 +1,23 @@
 package com.example.online.cafe.domain.orders.dto;
 
 import com.example.online.cafe.domain.menu.entity.Menu;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
+
 import java.util.List;
 
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class OrdersDto {
+
+    private Long menu_id;
+
+    private Long menu_quantity;
+
+    /*
+    // Currently not being used
     private Long order_number;
 
     private Menu menu_number;
@@ -27,4 +37,5 @@ public class OrdersDto {
     private String extra_address;
 
     private Boolean shipped;
+    */
 }
