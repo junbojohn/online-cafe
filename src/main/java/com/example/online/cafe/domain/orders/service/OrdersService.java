@@ -59,6 +59,10 @@ public class OrdersService {
             //if (ordered_menu_quantity[i] != null && ordered_menu_quantity[i] > 0) {
             if (shoppingCart.getOrders().get(i).getMenu_quantity() > 0) {
 
+                if (shoppingCart.getOrders().get(i).getMenu_id() == null) {
+                    throw new IllegalArgumentException("menu_id is null. It looks like the menu_id is not passed down at all.");
+                }
+
                 // 주문 번호도 생성되었으니 이제 builder()를 이용하여 삽입할 정보들을 삽입하고 데이터를 생성한다.
                 // order_number: 특정 주문을 가리키는 주문 번호. 주문 데이터 자체는 여러 개 씩 생성되나 이 주문 번호로 어떤 주문 데이터들이 어떤 주문에 포함되어 있는지 구별할 수 있다.
                 // menu_number: 한 주문에 포함되어 있는 상품(들 중 하나). 데이터 당 하나의 상품 데이터만 가리킬 수 있다.

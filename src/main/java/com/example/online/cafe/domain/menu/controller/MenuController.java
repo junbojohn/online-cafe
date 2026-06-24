@@ -70,6 +70,8 @@ public class MenuController {
         }
         */
 
+        System.out.println("Menu Data size: " + menuRepository.findAll().size());
+
         model.addAttribute("menuCustomerDto", menuCustomerDto);
         model.addAttribute("price", price);
         model.addAttribute("shoppingCart", shoppingCart);

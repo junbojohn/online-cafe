@@ -43,6 +43,8 @@
                             ₩<span th:text="${menu.price}"></span>
                         </h5>
 
+                        <input type="hidden" th:field="*{orders[__${stat.index}__].menu_id}" th:value="${menu.id}">
+
                         <input class="form-control" type="number" min="0" th:field="*{orders[__${stat.index}__].menu_quantity}">
                     </div>
 
