@@ -17,11 +17,11 @@
 
             <tbody>
                 <tr th:each="menu, stat : ${menuCustomerDto.content}">
-                    <td th:text="${menu.menu_name}"></td>
+                    <td th:text="${menu.menuName}"></td>
                     <td th:text="${menu.price}"></td>
                     <td th:text="${menu.rating}"></td>
                     <td>
-                        <a th:href="@{/customer/writeReview/writing(menuName = ${menu.menu_name}, menuId = ${menu.id})}">
+                        <a th:href="@{/customer/writeReview/writing(menuName = ${menu.menuName}, menuId = ${menu.id})}">
                             Write Review
                         </a>
                     </td>

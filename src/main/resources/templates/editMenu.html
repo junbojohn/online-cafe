@@ -5,12 +5,12 @@
     <title>Editing Menu</title>
 </head>
 <body>
-    <h1 th:text="${menuToEdit.menu_name}"></h1>
+    <h1 th:text="${menuToEdit.menuName}"></h1>
 
     <form th:action="@{/manager/menu/editAndDelete/edit/process}" method="post">
         <div>
             <label>Name: </label>
-            <input type="text" name="menu_name" th:placeholder="${menuToEdit.menu_name}">
+            <input type="text" name="menu_name" th:placeholder="${menuToEdit.menuName}">
         </div>
 
         <div>

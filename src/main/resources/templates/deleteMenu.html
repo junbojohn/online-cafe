@@ -5,7 +5,7 @@
     <title>Delete Menu</title>
 </head>
 <body>
-    <h1 th:text="${menuToDelete.menu_name}"></h1>
+    <h1 th:text="${menuToDelete.menuName}"></h1>
 
     <form th:action="@{/manager/menu/editAndDelete/delete/process}" method="post">
         <div>
